@@ -1,33 +1,31 @@
 <?php
 class DBWork {
-    public $DBHost;
+    /*public $DBHost;
     public $DBUser;
     public $DBPass;
-    public $DBName;
-    public function __construct($DBName,$DBUser,$DBPass){
-        $this->DBHost = 'localhost';
-        $this->DBUser = $DBUser;
-        $this->DBPass = $DBPass;
-        $this->DBName = $DBName;
+    public $DBName;*/
+    private $conn = false;
+    private $res;
+    public function __construct($Host,$DBName,$DBUser,$DBPass){
+        $this->conn =mysql_connect($Host,$DBUser,$DBPass);
+       mysql_select_db($DBName, $this->conn);
+    }
+    public function QueryBD($sql){
+         if(!$this->conn){
+             return false;
+         }
+        $this->res= mysql_query($sql);
+        if($this->res == false){
+            return false;
+        }
+        $rez=[];
+        if(is_object($this->res)) {
+            while ($row = $this->res->fetch_assoc()) {
+                $rez[] = $row;
+            }
+            return $rez;
+        }
+
 
     }
-    public function ADDtoBD($Head,$DateT,$Pass){
-        $res =mysql_query('INSERT INTO News(ID, Head, DateT, Pass) VALUES(NULL ,$HEAD,$DateT,$Pass)');
-        if(false === $res){
-            return false;}
-
-    }
-    public function UpdBD($ID,$Head,$DateT,$Pass){
-        $res =mysql_query('UPDATE News SET ID =NULL, Head=$HEAD, DateT = $DateT,Pass =$Pass WHERE ID=$ID )');
-        if(false === $res){
-            return false;
-
-        }}
-    public function SelFromBD($cond){
-        $res =mysql_query('SELECT * From News WHERE $cond)');
-        if(false === $res){
-            return false;
-
-        }}
-
 }
